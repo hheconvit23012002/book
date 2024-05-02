@@ -110,5 +110,46 @@ class BookController extends Controller
         }
     }
 
+    public function checkValidate(Request $request){
+        try {
+            $item = $request->get('item') ?? [];
+
+            foreach ($item as $each){
+                $product = Book::where('id', $each['product_id'])->where('quantity','>=', $each["number"])
+                    ->where('price', $each["price"])->first();
+                if(is_null($product) ){
+                    throw new \Exception('Product validation failed');
+                }
+            }
+
+            return $this->successResponse([],"Successfully");
+
+        }catch (\Exception $e){
+            return $this->errorResponse($e->getMessage());
+
+        }
+    }
+
+    public function updateProduct(Request $request){
+        try {
+            $item = $request->get('item') ?? [];
+
+            foreach ($item as $each){
+                $product = Book::where('id', $each['product_id'])->first();
+                if(is_null($product) ){
+                    throw new \Exception('Product validation failed');
+                }
+                $product->quantity -= $each['number'];
+                $product->save();
+            }
+
+            return $this->successResponse([],"Successfully");
+
+        }catch (\Exception $e){
+            return $this->errorResponse($e->getMessage());
+
+        }
+    }
+
     //
 }
