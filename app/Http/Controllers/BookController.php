@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Favourite;
 use App\Models\HistoryAddProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -148,6 +149,57 @@ class BookController extends Controller
         }catch (\Exception $e){
             return $this->errorResponse($e->getMessage());
 
+        }
+    }
+
+
+    public function addToFavorite(Request $request){
+        try {
+            $userLogin = $request->get('user');
+            $productId = $request->get('product_id');
+
+            Favourite::create([
+                'user_id' => $userLogin['id'],
+                'product_id' => $productId,
+            ]);
+            return response()->json([
+                "success" => true,
+            ]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
+
+        }
+    }
+    public function removeToFavorite(Request $request){
+        try {
+            $userLogin = $request->get('user');
+
+            $productId = $request->get('product_id');
+            Favourite::where('user_id', $userLogin['id'])
+                ->where('product_id', $productId)
+                ->delete();
+            return response()->json([
+                "success" => true,
+            ]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
+
+        }
+    }
+
+    public function getFavourite(Request $request){
+        try {
+            $userLogin = $request->get('user');
+
+            $products = Favourite::where('user_id', $userLogin['id'])
+                ->pluck('product_id')->toArray();
+            $data = Book::whereIn('id', $products)->get();
+            return response()->json([
+                "success" => true,
+                'data' => $data
+            ]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
         }
     }
 

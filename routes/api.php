@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Middleware\GetUserLoginMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,5 +32,14 @@ Route::group([
     Route::get('/{id}',[CategoryController::class,'get']);
     Route::post('/update/{id}',[CategoryController::class,'update']);
     Route::post('/delete/{id}',[CategoryController::class,'delete']);
+});
+
+Route::group([
+    'prefix' => 'favourite',
+    'middleware' => GetUserLoginMiddleware::class
+], function (){
+    Route::get('/getFavourite', [BookController::class,'getFavourite']);
+    Route::post('/addFavorite',[BookController::class,'addToFavorite']);
+    Route::post('/removeToFavorite',[BookController::class,'removeToFavorite']);
 });
 
