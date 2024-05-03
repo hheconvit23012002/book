@@ -41,11 +41,12 @@ class BookController extends Controller
                 'author' => $request->get('author') ?? "",
                 'description' => $request->get('description') ?? "",
                 'category_id' => $request->get('category_id') ?? "",
+                'image' => $request->get('image') ?? "",
             ];
-            $image = $request->file("image") ?? null;
-            if(!is_null($image)){
-                $data['path'] = Storage::disk('public')->putFile("image",$image);
-            }
+//            $image = $request->file("image") ?? null;
+//            if(!is_null($image)){
+//                $data['image'] = Storage::disk('public')->putFile("image",$image);
+//            }
             Book::create($data);
             return $this->successResponse([],"Successfully");
         }catch (\Exception $e){
@@ -62,11 +63,12 @@ class BookController extends Controller
                 'author' => $request->get('author') ?? "",
                 'description' => $request->get('description') ?? "",
                 'category_id' => $request->get('category_id') ?? "",
+                'image' => $request->get('image') ?? "",
             ];
-            $image = $request->file("image") ?? null;
-            if(!is_null($image)){
-                $data['path'] = Storage::disk('public')->putFile("image",$image);
-            }
+//            $image = $request->file("image") ?? null;
+//            if(!is_null($image)){
+//                $data['image'] = Storage::disk('public')->putFile("image",$image);
+//            }
             Book::where('id', $id)->update($data);
             return $this->successResponse([],"Successfully");
         }catch (\Exception $e){
