@@ -21,6 +21,7 @@ Route::group([
     Route::post('/addNumber/{id}',[BookController::class,'addNumberProduct']);
     Route::post('/checkValidate',[BookController::class,'checkValidate']);
     Route::post('/updateProduct',[BookController::class,'updateProduct']);
+    Route::post('/updateProduct',[BookController::class,'updateProduct']);
 });
 
 Route::get('/books',[BookController::class,'index'])->name('books');

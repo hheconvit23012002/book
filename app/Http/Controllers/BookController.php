@@ -205,5 +205,16 @@ class BookController extends Controller
         }
     }
 
+    public function getListProductBuyMonth(Request $request){
+        try {
+            $listIds = $request->get('list-product');
+            $data = Book::whereId('id', $listIds);
+            return response()->json($data);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
+
+        }
+    }
+
     //
 }
