@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Favourite;
 use App\Models\HistoryAddProduct;
+use App\Models\Rate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
@@ -14,9 +16,11 @@ class BookController extends Controller
     public function index(Request $request){
         try {
             $searchParam = $this->extractSearchParam($request);
-            $books = Book::withFilter($searchParam)->latest()->paginate();
+            $books = Book::with('category','rate')->
+                withFilter($searchParam)->latest()->paginate();
             foreach ($books as $book){
                 $book->category = $book->name_category;
+
             }
             return $this->successResponse($books);
         }catch(Exception $e){
@@ -207,12 +211,47 @@ class BookController extends Controller
 
     public function getListProductBuyMonth(Request $request){
         try {
-            $listIds = $request->get('list-product');
+            $response = Http::withHeaders([
+                "Accept" => "application/json",
+            ])->get('http://127.0.0.1:5051/api/user');
+            if($response->status() !== 200){
+                return \response()->json([
+                    'message' => $response
+                ], $response->status());
+            }
+            $request->merge(['user' => $response->json()]);
             $data = Book::whereId('id', $listIds);
             return response()->json($data);
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 500);
 
+        }
+    }
+    public function comment(Request $request){
+        try {
+            $rate = $request->get('rate');
+            $description = $request->get('description') ?? "";
+            $user = $request->get('user');
+            $bookId = $request->get('book_id');
+            if(is_null($bookId)){
+                throw  new \Exception('book not found');
+            }
+            if($rate === null || ($rate < 0 || $rate > 5)){
+                throw new \Exception("Invalid rate");
+            }
+            $comment = Rate::create([
+                'name_user' => $user['name'],
+                'rate' => $rate,
+                'description' => $description,
+                'book_id' => $bookId,
+                'user_id' => $user['id'],
+            ]);
+            return response()->json([
+                'success' => true,
+                'data' => $comment
+            ]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
         }
     }
 

@@ -23,6 +23,10 @@ class Book extends Model
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
 
+    public function rate(){
+        return $this->hasMany(Rate::class, 'book_id', 'id');
+    }
+
     public function getNameCategoryAttribute(){
         return $this->category->name;
     }
