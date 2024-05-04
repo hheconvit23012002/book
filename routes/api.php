@@ -15,14 +15,14 @@ Route::group([
 ], function (){
     Route::get('/',[BookController::class,'index']);
     Route::post('/store',[BookController::class,'store']);
-    Route::get('/{id}',[BookController::class,'get']);
     Route::post('/comment',[BookController::class,'comment'])->middleware([GetUserLoginMiddleware::class]);
     Route::post('/update/{id}',[BookController::class,'update']);
     Route::post('/delete/{id}',[BookController::class,'delete']);
     Route::post('/addNumber/{id}',[BookController::class,'addNumberProduct']);
     Route::post('/checkValidate',[BookController::class,'checkValidate']);
     Route::post('/updateProduct',[BookController::class,'updateProduct']);
-    Route::get('/updateProduct',[BookController::class,'updateProduct']);
+    Route::get('/getListProductBuyMonth',[BookController::class,'getListProductBuyMonth']);
+    Route::get('/{id}',[BookController::class,'get']);
 });
 
 Route::get('/books',[BookController::class,'index'])->name('books');

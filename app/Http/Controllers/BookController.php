@@ -213,14 +213,22 @@ class BookController extends Controller
         try {
             $response = Http::withHeaders([
                 "Accept" => "application/json",
-            ])->get('http://127.0.0.1:5051/api/user');
+            ])->get('http://127.0.0.1:5051/api/getProductBuyMonth');
             if($response->status() !== 200){
                 return \response()->json([
                     'message' => $response
                 ], $response->status());
             }
-            $request->merge(['user' => $response->json()]);
-            $data = Book::whereId('id', $listIds);
+            $topProduct = $response->json();
+            $data = [];
+            foreach ($topProduct as $value){
+                $book = Book::where('id', $value['product_id'])->first();
+                $data[] =[
+                    'product_id' => $value['product_id'],
+                    'number' => $value['number'],
+                    'book' => $book
+                ];
+            }
             return response()->json($data);
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 500);
