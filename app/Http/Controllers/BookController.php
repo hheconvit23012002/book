@@ -270,7 +270,7 @@ class BookController extends Controller
             $endOfMonth = Carbon::now()->endOfMonth();
             $data = Book::
             with('category','rate')->whereBetween('updated_at',[$firstDayOfMonth,$endOfMonth])
-                ->orderByDesc('updateed_at')
+                ->orderByDesc('updated_at')
                 ->take(10)
                 ->get();
             return response()->json([
