@@ -21,7 +21,6 @@ class BookController extends Controller
                 withFilter($searchParam)->latest()->paginate();
             foreach ($books as $book){
                 $book->category = $book->name_category;
-
             }
             return $this->successResponse($books);
         }catch(Exception $e){
@@ -35,6 +34,20 @@ class BookController extends Controller
             'author' => $request->get('author') ?? null,
             'category' => $request->get('category') ?? null,
         ];
+    }
+
+    public function notPagingBook(Request $request){
+        try {
+            $searchParam = $this->extractSearchParam($request);
+            $books = Book::with('category','rate')->
+            withFilter($searchParam)->latest()->get();
+            foreach ($books as $book){
+                $book->category = $book->name_category;
+            }
+            return $this->successResponse($books);
+        }catch(Exception $e){
+            return $this->errorResponse($e->getMessage());
+        }
     }
 
     public function store(Request $request){

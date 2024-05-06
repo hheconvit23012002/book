@@ -21,6 +21,7 @@ Route::group([
     Route::post('/addNumber/{id}',[BookController::class,'addNumberProduct']);
     Route::post('/checkValidate',[BookController::class,'checkValidate']);
     Route::post('/updateProduct',[BookController::class,'updateProduct']);
+    Route::get('/notPagingBook',[BookController::class,'notPagingBook']);
     Route::get('/getListProductInMonth',[BookController::class,'getListProductBuyMonth']);
     Route::get('/getProductUpdateInMonth',[BookController::class,'getProductUpdateInMonth']);
     Route::get('/{id}',[BookController::class,'get']);
