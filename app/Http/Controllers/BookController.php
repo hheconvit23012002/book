@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Favourite;
 use App\Models\HistoryAddProduct;
 use App\Models\Rate;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -260,6 +261,24 @@ class BookController extends Controller
             ]);
         }catch (\Exception $e){
             return response()->json($e->getMessage(), 500);
+        }
+    }
+
+    public function getProductUpdateInMonth(Request $request){
+        try {
+            $firstDayOfMonth = Carbon::now()->firstOfMonth();
+            $endOfMonth = Carbon::now()->endOfMonth();
+            $data = Book::
+            with('category','rate')->whereBetween('updated_at',[$firstDayOfMonth,$endOfMonth])
+                ->orderByDesc('updateed_at')
+                ->take(10)
+                ->get();
+            return response()->json([
+                'data' => $data
+            ]);
+        }catch (\Exception $e){
+            return response()->json($e->getMessage(), 500);
+
         }
     }
 
