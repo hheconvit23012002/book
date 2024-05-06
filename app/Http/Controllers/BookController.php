@@ -224,6 +224,9 @@ class BookController extends Controller
             $data = [];
             foreach ($topProduct as $value){
                 $book = Book::where('id', $value['product_id'])->first();
+                if(is_null($book)){
+                    continue;
+                }
                 $data[] =[
                     'product_id' => $value['product_id'],
                     'number' => $value['number'],
