@@ -105,6 +105,7 @@ class BookController extends Controller
 
     public function delete(Request $request, $id){
         try {
+            HistoryAddProduct::where('book_id',$id)->delete();
             Book::where('id', $id)->delete();
             return $this->successResponse([],"Successfully");
         }catch (\Exception $e){
